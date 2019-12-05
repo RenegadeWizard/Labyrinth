@@ -146,6 +146,7 @@ class Ranking:
 
 
 class localStaff(threading.Thread):
+    """Class for local work (game)"""
     def __init__(self, ranking):
         self.rank=ranking
 
@@ -157,6 +158,7 @@ class localStaff(threading.Thread):
 
 
 class serverStaff(threading.Thread):
+    """Class for server work (showing ranking in a browser)"""
     def __init__(self,ranking):
         self.rank=ranking
 
