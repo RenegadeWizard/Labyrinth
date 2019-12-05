@@ -105,6 +105,23 @@ class Labirynth:
             if (self.upperRow <14):
                 self.upperRow += 1
 
+
 if __name__=="__main__":
     lab=Labirynth()
-    print(lab.play2rows())
+    result=str(lab.play2rows())
+    print("Your result is", result)
+    file=open("wyniki.txt","r")
+    results=[]
+    for i in range(10):
+        res=file.readline()
+        results.append(res)
+    file.close()
+    results.append(result)
+    results.sort()
+    print("Best results are:")
+    file=open("wyniki.txt","w")
+    for i in range(10):
+        print(i,results[i])
+        file.write(results[i])
+        file.write("\n")
+
