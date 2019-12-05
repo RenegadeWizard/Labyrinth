@@ -26,11 +26,16 @@ class Labirynth:
         self.charY=15
         self.charX=11
         self.isFinished=False
+        self.upperRow=14
         self.start=datetime.now()
 
     def print(self):
         for i in range(len(self.matrix)):
             print(self.matrix[i])
+
+    def print2lines(self):
+        print(self.matrix[self.upperRow])
+        print(self.matrix[self.upperRow+1])
 
     def playloop(self):
         while (self.isFinished==False):
@@ -40,6 +45,15 @@ class Labirynth:
             print(" ")
             print(" ")
         return (datetime.now()-self.start)
+
+    def play2rows(self):
+        while (self.isFinished==False):
+            self.print2lines()
+            direction=raw_input().split()[0]
+            self.move(direction)
+            print(" ")
+            print(" ")
+        return (datetime.now() - self.start)
 
     def move (self, site):
         if (site=='u'): #up
@@ -84,7 +98,13 @@ class Labirynth:
                 self.charX+=1
         if (site=='c'): #cheating
             self.isFinished=True
+        if (site=='w'): #show row up
+            if (self.upperRow>0):
+                self.upperRow-=1
+        if (site == 's'):  # show row down
+            if (self.upperRow <14):
+                self.upperRow += 1
 
 if __name__=="__main__":
     lab=Labirynth()
-    print(lab.playloop())
+    print(lab.play2rows())
