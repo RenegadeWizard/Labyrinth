@@ -1,10 +1,15 @@
 from datetime import datetime
-
+from os import curdir, sep
+from http.server import BaseHTTPRequestHandler,HTTPServer
 from pip._vendor.distlib.compat import raw_input
 
 
 class Labirynth:
+
     def __init__(self):
+        """
+        Preparing: create a maze etc"
+        """
         self.matrix = [
             " #k   #   ###   ",
             " ####   #   # # ",
@@ -30,14 +35,17 @@ class Labirynth:
         self.start=datetime.now()
 
     def print(self):
+        """Printing current state of a maze"""
         for i in range(len(self.matrix)):
             print(self.matrix[i])
 
     def print2lines(self):
+        """Printing current state of 2 rows of a maze"""
         print(self.matrix[self.upperRow])
         print(self.matrix[self.upperRow+1])
 
     def playloop(self):
+        """Loop for play with full maze"""
         while (self.isFinished==False):
             self.print()
             direction=raw_input().split()[0]
@@ -47,6 +55,7 @@ class Labirynth:
         return (datetime.now()-self.start)
 
     def play2rows(self):
+        """Loop for play with 2 rows"""
         while (self.isFinished==False):
             self.print2lines()
             direction=raw_input().split()[0]
@@ -56,6 +65,7 @@ class Labirynth:
         return (datetime.now() - self.start)
 
     def move (self, site):
+        """Changing state of a play by a player"""
         if (site=='u'): #up
             if (self.charY>0 and self.matrix[self.charY-1][self.charX]!='#'):
                 if  self.matrix[self.charY-1][self.charX]=='k':
@@ -105,23 +115,39 @@ class Labirynth:
             if (self.upperRow <14):
                 self.upperRow += 1
 
+class Ranking:
+    def reloadRanking(self, result):
+        """Reloading ranking after end of a game"""
+        file = open("wyniki.txt", "r")
+        results = []
+        for i in range(10):
+            res = file.readline()
+            results.append(res)
+        file.close()
+        results.append(result)
+        results.sort()
+        print("Best results are:")
+        file = open("wyniki.txt", "w")
+        for i in range(10):
+            print(i, results[i])
+            file.write(results[i])
+            file.write("\n")
+        file.close()
+
+    def returnCurrentRankingFileAsString(self):
+        """Reading current version of ranking and returning it as string
+        (will be used to serve ranking in a browser)"""
+        file=open("wyniki.txt","r")
+        fullFile=""
+        for i in range(10):
+            fullFile += file.readline()
+        file.close()
+        return fullFile
+
 
 if __name__=="__main__":
     lab=Labirynth()
-    result=str(lab.play2rows())
-    print("Your result is", result)
-    file=open("wyniki.txt","r")
-    results=[]
-    for i in range(10):
-        res=file.readline()
-        results.append(res)
-    file.close()
-    results.append(result)
-    results.sort()
-    print("Best results are:")
-    file=open("wyniki.txt","w")
-    for i in range(10):
-        print(i,results[i])
-        file.write(results[i])
-        file.write("\n")
+    rank=Ranking()
+    print(rank.returnCurrentRankingFileAsString())
+
 
