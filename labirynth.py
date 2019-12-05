@@ -2,10 +2,10 @@ from datetime import datetime
 from os import curdir, sep
 from http.server import BaseHTTPRequestHandler,HTTPServer
 from pip._vendor.distlib.compat import raw_input
+import threading
 
 
 class Labirynth:
-
     def __init__(self):
         """
         Preparing: create a maze etc"
@@ -145,9 +145,28 @@ class Ranking:
         return fullFile
 
 
+class localStaff(threading.Thread):
+    def __init__(self, ranking):
+        self.rank=ranking
+
+    def run(self):
+        lab = Labirynth()
+        result = lab.playloop()
+        print("Your result is", result)
+        self.ranking.reloadRanking(result)
+
+
+class serverStaff(threading.Thread):
+    def __init__(self,ranking):
+        self.rank=ranking
+
+    def run(self):
+        pass
+
 if __name__=="__main__":
-    lab=Labirynth()
     rank=Ranking()
-    print(rank.returnCurrentRankingFileAsString())
+    localStaff(rank).run()
+    serverStaff(rank).run()
+
 
 
