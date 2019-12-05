@@ -90,7 +90,7 @@ class Labirynth:
                 self.charY+=1
         if (site=='l'): #left
             if (self.charX>0 and self.matrix[self.charY][self.charX-1]!='#'):
-                if  self.matrix[self.charY][self.charX-1]=='#k':
+                if  self.matrix[self.charY][self.charX-1]=='k':
                     self.isFinished=True
                 localVar = list(self.matrix[self.charY])
                 localVar[self.charX] = ' '
@@ -99,7 +99,7 @@ class Labirynth:
                 self.charX-=1
         if (site=='r'): #right
             if (self.charX<15 and self.matrix[self.charY][self.charX+1]!='#'):
-                if  self.matrix[self.charY][self.charX+1]=='#k':
+                if  self.matrix[self.charY][self.charX+1]=='k':
                     self.isFinished=True
                 localVar = list(self.matrix[self.charY])
                 localVar[self.charX] = ' '
@@ -124,7 +124,7 @@ class Ranking:
             res = file.readline()
             results.append(res)
         file.close()
-        results.append(result)
+        results.append(str(result))
         results.sort()
         print("Best results are:")
         file = open("wyniki.txt", "w")
@@ -154,7 +154,7 @@ class localStaff(threading.Thread):
         lab = Labirynth()
         result = lab.playloop()
         print("Your result is", result)
-        self.ranking.reloadRanking(result)
+        self.rank.reloadRanking(result)
 
 
 class serverStaff(threading.Thread):
