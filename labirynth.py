@@ -4,7 +4,6 @@ from http.server import BaseHTTPRequestHandler,HTTPServer
 from pip._vendor.distlib.compat import raw_input
 import threading
 
-
 class Labirynth:
     def __init__(self):
         """
@@ -159,16 +158,32 @@ class localStaff(threading.Thread):
 
 class serverStaff(threading.Thread):
     """Class for server work (showing ranking in a browser)"""
-    def __init__(self,ranking):
-        self.rank=ranking
+    def __init__(self):
+        pass
 
     def run(self):
-        pass
+        server = HTTPServer(('', 8090), HTTPHandler)
+        print('Started httpserver on port ', 8090)
+        server.serve_forever()
+
+class HTTPHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        try:
+            if self.path == "/":
+                f = open("wyniki.txt")
+                self.send_response(200)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                b = bytes(f.read(), 'utf-8')
+                self.wfile.write(b)
+                f.close()
+                return
+
+        except IOError:
+            self.send_error(404, 'File Not Found: %s' % self.path)
+
 
 if __name__=="__main__":
     rank=Ranking()
-    localStaff(rank).run()
-    serverStaff(rank).run()
-
-
-
+    serverStaff().run()
